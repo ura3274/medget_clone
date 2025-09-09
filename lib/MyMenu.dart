@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
 class MyMenu extends StatefulWidget {
-  MyMenu(
+  const MyMenu(
       {required this.arr, required this.link, required this.size, super.key});
   final List<String> arr;
   final LayerLink link;

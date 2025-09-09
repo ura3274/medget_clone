@@ -35,7 +35,7 @@ class _FirstPageState extends State<FirstPage> {
   final ScrollController _controller = ScrollController();
   late List<String> keys;
   late Map<String, myData> data;
-  List<(LayerLink, Size)> _link = [];
+  final List<(LayerLink, Size)> _link = [];
   LayerLink filterLink = LayerLink();
 
   void openMenuCall(int id) {

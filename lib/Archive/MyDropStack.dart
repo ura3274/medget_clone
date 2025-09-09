@@ -12,7 +12,7 @@ class MyStates extends ChangeNotifier {
 }
 
 class MyDropStack extends StatefulWidget {
-  MyDropStack({required this.arr, super.key});
+  const MyDropStack({required this.arr, super.key});
 
   final List<String> arr;
   @override
@@ -22,8 +22,8 @@ class MyDropStack extends StatefulWidget {
 class _MyDropStackState extends State<MyDropStack> {
   OverlayEntry? entry;
   OverlayEntry? entry2;
-  GlobalKey _key = GlobalKey();
-  LayerLink _link = LayerLink();
+  final GlobalKey _key = GlobalKey();
+  final LayerLink _link = LayerLink();
   late String _text;
   int widthButton = 0;
 
@@ -31,11 +31,11 @@ class _MyDropStackState extends State<MyDropStack> {
   void initState() {
     super.initState();
     //int kk = 0;
-    widget.arr.forEach((v) {
+    for (var v in widget.arr) {
       if (v.length > widthButton) {
         widthButton = v.length;
       }
-    });
+    }
     //print("${widthButton}");
     _text = widget.arr.first;
     //WidgetsBinding.instance.addPostFrameCallback((_) {

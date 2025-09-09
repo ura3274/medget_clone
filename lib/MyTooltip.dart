@@ -5,10 +5,10 @@ class MyTooltip extends StatefulWidget {
   final String message;
 
   const MyTooltip({
-    Key? key,
+    super.key,
     required this.child,
     required this.message,
-  }) : super(key: key);
+  });
 
   @override
   State<MyTooltip> createState() => _CustomTooltipState();

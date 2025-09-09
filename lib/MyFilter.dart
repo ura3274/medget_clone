@@ -40,7 +40,7 @@ class _MyFilterState extends State<MyFilter> {
                   ),
                   CompositedTransformTarget(
                     link: widget.link[ind].$1,
-                    child: Container(
+                    child: SizedBox(
                       width: widget.link[ind].$2.width,
                       height: widget.link[ind].$2.height,
                     ),

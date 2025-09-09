@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
 class MyDropDownMenu extends StatefulWidget {
-  MyDropDownMenu({required this.arr, super.key});
+  const MyDropDownMenu({required this.arr, super.key});
 
   final List<String> arr;
 
@@ -12,8 +12,8 @@ class MyDropDownMenu extends StatefulWidget {
 
 class _MyDropDownMenuState extends State<MyDropDownMenu> {
   OverlayEntry? _overlayEntry;
-  LayerLink _link = LayerLink();
-  GlobalKey _key = GlobalKey();
+  final LayerLink _link = LayerLink();
+  final GlobalKey _key = GlobalKey();
   late String _text;
 
   void getTextFmMenu(String value) {
@@ -48,17 +48,17 @@ class _MyDropDownMenuState extends State<MyDropDownMenu> {
                 decoration: BoxDecoration(color: Colors.white),
                 child: Column(
                   children: widget.arr.map((it) {
-                    final ValueNotifier<bool> _isHovered = ValueNotifier(false);
+                    final ValueNotifier<bool> isHovered = ValueNotifier(false);
                     return MouseRegion(
                       onEnter: (_) {
                         //print('enter');
                         setState(() {
-                          _isHovered.value = true;
+                          isHovered.value = true;
                         });
                       },
                       onExit: (_) {
                         setState(() {
-                          _isHovered.value = false;
+                          isHovered.value = false;
                         });
                       },
                       child: GestureDetector(
@@ -68,7 +68,7 @@ class _MyDropDownMenuState extends State<MyDropDownMenu> {
                           });
                         },
                         child: ValueListenableBuilder(
-                            valueListenable: _isHovered,
+                            valueListenable: isHovered,
                             builder: (ctxt, hovered, child) {
                               return Text(
                                 it,
