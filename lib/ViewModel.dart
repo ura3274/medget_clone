@@ -12,4 +12,8 @@ class ViewModel {
   List<BtnState> getTitleData() {
     return myRepo.titleData;
   }
+
+  Map<String, List<String>> getTitle() {
+    return myRepo.titles;
+  }
 }

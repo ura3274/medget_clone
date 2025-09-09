@@ -10,14 +10,7 @@ import 'package:my_app/MyAppBar.dart';
 
 class FirstPage extends StatefulWidget {
   FirstPage({required this.vm, super.key});
-  final titles = {
-    "Жанр": ["Любой", "Боевик", "Вестерн", "Военный"],
-    "Года": ["Любой", "2025", "2024", "2023", "2022"],
-    "Рейтинг": ["Любой", "9+", "8+", "7+", "6+"],
-    "Сортировать по": ["По рейтингу", "По новизне", "По популярности"],
-    "Язык озвучки": ["Любой", "Русский", "English", "Espanol", "Turkish"],
-    "Язык субтитров": ["Любой", "Русский", "English", "Espanol", "Turkish"],
-  };
+
   final ViewModel vm;
   final double _scrollFactor = 0.7;
   @override
@@ -49,10 +42,10 @@ class _FirstPageState extends State<FirstPage> {
     super.initState();
     keys = widget.vm.getData()[routeId].keys.toList();
     data = widget.vm.getData()[routeId];
-    for (var i in widget.titles.keys) {
+    for (var i in widget.vm.getTitle().keys) {
       double widthButton = 0;
 
-      widget.titles[i]?.forEach((v) {
+      widget.vm.getTitle()[i]?.forEach((v) {
         if (v.length.toDouble() > widthButton) {
           widthButton = v.length.toDouble();
         }
@@ -157,7 +150,7 @@ class _FirstPageState extends State<FirstPage> {
                   SliverToBoxAdapter(
                     child: MyFilter(
                       link: _link,
-                      titleMap: widget.titles,
+                      titleMap: widget.vm.getTitle(),
                     ),
                   ),
                 SliverList(
@@ -183,9 +176,10 @@ class _FirstPageState extends State<FirstPage> {
               ]),
             ),
             if (showFilter)
-              for (int i = 0; i < widget.titles.length; ++i)
+              for (int i = 0; i < widget.vm.getTitle().length; ++i)
                 MyMenu(
-                  arr: widget.titles[widget.titles.keys.toList()[i]]!,
+                  arr: widget.vm
+                      .getTitle()[widget.vm.getTitle().keys.toList()[i]]!,
                   link: _link[i].$1,
                   size: _link[i].$2,
                 ),
