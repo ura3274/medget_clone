@@ -3,13 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:my_app/MovieList.dart';
 import 'package:my_app/MyMenu.dart';
 import 'package:my_app/MyFilter.dart';
+import 'package:my_app/MySliverHeader.dart';
 import 'package:my_app/Repositiriy.dart';
 import 'package:my_app/SliverTitle.dart';
 import 'package:my_app/ViewModel.dart';
 import 'package:my_app/MyAppBar.dart';
 
 class FirstPage extends StatefulWidget {
-  FirstPage({required this.vm, super.key});
+  const FirstPage({required this.vm, super.key});
 
   final ViewModel vm;
   final double _scrollFactor = 0.7;
@@ -22,6 +23,7 @@ class _FirstPageState extends State<FirstPage> {
   bool _expandAppBar = true;
   bool _atTop = true;
   bool _enable = true;
+  double appBarHeight = kToolbarHeight - 10;
   int routeId = 0;
   int titleId = 0;
   bool showFilter = false;
@@ -30,6 +32,7 @@ class _FirstPageState extends State<FirstPage> {
   late Map<String, myData> data;
   final List<(LayerLink, Size)> _link = [];
   LayerLink filterLink = LayerLink();
+  LayerLink appBarLink = LayerLink();
 
   void openMenuCall(int id) {
     setState(() {
@@ -62,7 +65,10 @@ class _FirstPageState extends State<FirstPage> {
             _atTop = false;
             _enableExpand = true;
             _expandAppBar = false;
-            _enable = false;
+            //_enable = false;
+            appBarHeight = appBarHeight > 5
+                ? appBarHeight - (_controller.position.pixels * 0.01).toDouble()
+                : appBarHeight - 0;
           });
         }
       } else {
@@ -111,9 +117,10 @@ class _FirstPageState extends State<FirstPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        extendBodyBehindAppBar: _atTop ? false : true,
+        extendBodyBehindAppBar: false,
         appBar: AppBar(
-          toolbarHeight: _expandAppBar ? kToolbarHeight - 10 : 5,
+          toolbarHeight: kToolbarHeight -
+              10, //_expandAppBar ? kToolbarHeight - 10 : appBarHeight,
           shadowColor: Colors.black,
           //elevation: 20,
           clipBehavior: Clip.hardEdge,
@@ -123,16 +130,13 @@ class _FirstPageState extends State<FirstPage> {
                 alignment: Alignment.center,
                 //margin: EdgeInsets.symmetric(horizontal: 10),
                 padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
-                height: _expandAppBar ? kToolbarHeight - 10 : 5,
+                height: kToolbarHeight -
+                    10, //_expandAppBar ? kToolbarHeight - 10 : appBarHeight,
                 decoration: BoxDecoration(color: Colors.white, boxShadow: [
                   //BoxShadow(
                   //  offset: Offset(-2, 0), blurRadius: 3, spreadRadius: 0)
                 ]),
                 clipBehavior: Clip.hardEdge,
-                child: MyAppBar(
-                    arr: widget.vm.getTitleData(),
-                    btnChecked: routeId,
-                    routeCallback: routeCallBack),
               )
             ],
           ),
@@ -142,6 +146,9 @@ class _FirstPageState extends State<FirstPage> {
             Listener(
               onPointerSignal: _handlePointerSignal,
               child: CustomScrollView(controller: _controller, slivers: [
+                SliverPersistentHeader(
+                    //floating: true,
+                    delegate: MySliverHeader(appBarLink: appBarLink)),
                 if (routeId != 0)
                   SliverPersistentHeader(
                       pinned: true,
@@ -196,7 +203,18 @@ class _FirstPageState extends State<FirstPage> {
                             onPressed: showMyFiltering, child: Text("Filter"))
                       ],
                     )),
-              )
+              ),
+            CompositedTransformFollower(
+                link: appBarLink,
+                //showWhenUnlinked: false,
+                child: Wrap(
+                  children: [
+                    MyAppBar(
+                        arr: widget.vm.getTitleData(),
+                        btnChecked: routeId,
+                        routeCallback: routeCallBack)
+                  ],
+                ))
           ],
         ));
   }

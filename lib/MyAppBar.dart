@@ -23,7 +23,7 @@ class _MyAppBarState extends State<MyAppBar> {
   Widget build(BuildContext context) {
     return Container(
       alignment: Alignment.centerLeft,
-      //decoration: BoxDecoration(color: Colors.black),
+      decoration: BoxDecoration(color: Colors.black),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
@@ -35,7 +35,15 @@ class _MyAppBarState extends State<MyAppBar> {
                 isChecked: it.id == widget.btnChecked ? true : false,
                 callFn: widget.routeCallback);
           }).toList()),
-          MySwitch()
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 10.0),
+                  child: Text("Скачать без торрентов")),
+              MySwitch()
+            ],
+          )
         ],
       ),
     );
