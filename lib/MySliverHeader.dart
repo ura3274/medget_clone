@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'MyAppBarTarget.dart';
 
 class MySliverHeader extends SliverPersistentHeaderDelegate {
-  MySliverHeader({required this.appBarLink});
+  MySliverHeader({required this.data, required this.appBarHeightCallBack});
+  Sliverheaderdata data;
+  void Function(bool) appBarHeightCallBack;
 
-  LayerLink appBarLink;
   //void Function() showFiltering;
   @override
   double get minExtent => 40;
@@ -14,11 +14,45 @@ class MySliverHeader extends SliverPersistentHeaderDelegate {
   @override
   Widget build(
       BuildContext context, double shrinkOffset, bool overlapsContent) {
-    //print("${shrinkOffset}");
+    print("${shrinkOffset}");
+    data.offset = shrinkOffset;
+    if (shrinkOffset >= 40.0 && data.disconnected) {
+      appBarHeightCallBack(true);
+      data.disconnected = false;
+    } else if (shrinkOffset < 40.0 && !data.disconnected) {
+      appBarHeightCallBack(false);
+      data.disconnected = true;
+    }
 
-    return Target(appBarLink: appBarLink);
+    return CompositedTransformTarget(
+      link: data.link,
+      child: Builder(
+        builder: (context) {
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            /*if (shrinkOffset >= 40.0 && data.disconnected) {
+              appBarHeightCallBack(true);
+              data.disconnected = false;
+            } else
+            if (shrinkOffset < 40.0 && !data.disconnected) {
+              appBarHeightCallBack(false);
+              data.disconnected = true;
+            }*/
+          });
+
+          return Container();
+        },
+      ),
+    );
   }
 
   @override
-  bool shouldRebuild(_) => true;
+  bool shouldRebuild(_) => false;
+}
+
+class Sliverheaderdata {
+  final LayerLink link;
+  bool disconnected;
+  double offset;
+  Sliverheaderdata(
+      {required this.link, required this.disconnected, required this.offset});
 }

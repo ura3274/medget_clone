@@ -32,7 +32,11 @@ class _FirstPageState extends State<FirstPage> {
   late Map<String, myData> data;
   final List<(LayerLink, Size)> _link = [];
   LayerLink filterLink = LayerLink();
-  LayerLink appBarLink = LayerLink();
+  //LayerLink appBarLink = LayerLink();
+  Sliverheaderdata headerData =
+      Sliverheaderdata(link: LayerLink(), disconnected: true, offset: 0);
+  bool appBarVisibleWhenDisconnected = false;
+  ValueNotifier<bool> noti = ValueNotifier<bool>(true);
 
   void openMenuCall(int id) {
     setState(() {
@@ -57,30 +61,64 @@ class _FirstPageState extends State<FirstPage> {
     }
 
     _controller.addListener(() {
-      //print("Позиция скролла: ${_controller?.position.atEdge}");
-      if (_controller.position.pixels != 0.0) {
-        if (_enable) {
-          setState(() {
-            //print("enable");
-            _atTop = false;
-            _enableExpand = true;
-            _expandAppBar = false;
-            //_enable = false;
-            appBarHeight = appBarHeight > 5
-                ? appBarHeight - (_controller.position.pixels * 0.01).toDouble()
-                : appBarHeight - 0;
-          });
-        }
-      } else {
+      /*Future.delayed(
+        Duration(milliseconds: 200),
+        () {
+          print("Позиция скролла: ${_controller?.position.atEdge}");
+        },
+      );*/
+
+      //if (_controller.position.pixels != 0.0) {
+      /*if (headerData.offset >= 39.7 && headerData.disconnected) {
         setState(() {
-          //print("disable");
-          _atTop = true;
+          print("enable");
+          //_atTop = false;
+          _enableExpand = true;
+          _expandAppBar = false;
+          appBarVisibleWhenDisconnected = true;
+          headerData.disconnected = false;
+          //_enable = false;
+        });
+      }*/
+
+      /*else if (headerData.offset < 40.0 && !_enable) {
+        setState(() {
+          print("disable");
+          //_atTop = true;
           _enableExpand = false;
           _expandAppBar = true;
+          appBarVisibleWhenDisconnected = false;
           _enable = true;
         });
-      }
+      }*/
     });
+  }
+
+  void appBarHeightCallBack(bool flag) {
+    switch (flag) {
+      case true:
+        setState(() {
+          print("enable");
+          //_atTop = false;
+          _enableExpand = true;
+          _expandAppBar = false;
+          //_enable = false;
+          appBarVisibleWhenDisconnected = true;
+        });
+
+        break;
+      case false:
+        //noti.value = false;
+        setState(() {
+          print("disable");
+          //_atTop = true;
+          _enableExpand = false;
+          _expandAppBar = true;
+          //_enable = true;
+          appBarVisibleWhenDisconnected = false;
+        });
+        break;
+    }
   }
 
   void routeCallBack(int id) {
@@ -121,7 +159,7 @@ class _FirstPageState extends State<FirstPage> {
         appBar: AppBar(
           toolbarHeight: kToolbarHeight -
               10, //_expandAppBar ? kToolbarHeight - 10 : appBarHeight,
-          shadowColor: Colors.black,
+          //shadowColor: Colors.black,
           //elevation: 20,
           clipBehavior: Clip.hardEdge,
           flexibleSpace: Wrap(
@@ -148,7 +186,9 @@ class _FirstPageState extends State<FirstPage> {
               child: CustomScrollView(controller: _controller, slivers: [
                 SliverPersistentHeader(
                     //floating: true,
-                    delegate: MySliverHeader(appBarLink: appBarLink)),
+                    delegate: MySliverHeader(
+                        data: headerData,
+                        appBarHeightCallBack: appBarHeightCallBack)),
                 if (routeId != 0)
                   SliverPersistentHeader(
                       pinned: true,
@@ -205,14 +245,20 @@ class _FirstPageState extends State<FirstPage> {
                     )),
               ),
             CompositedTransformFollower(
-                link: appBarLink,
-                //showWhenUnlinked: false,
+                link: headerData.link,
+                showWhenUnlinked: appBarVisibleWhenDisconnected,
                 child: Wrap(
                   children: [
-                    MyAppBar(
-                        arr: widget.vm.getTitleData(),
-                        btnChecked: routeId,
-                        routeCallback: routeCallBack)
+                    ValueListenableBuilder<bool>(
+                        valueListenable: noti,
+                        builder: (context, value, child) {
+                          return MyAppBar(
+                              arr: widget.vm.getTitleData(),
+                              btnChecked: routeId,
+                              appBarHeight:
+                                  _expandAppBar ? kToolbarHeight - 10 : 6,
+                              routeCallback: routeCallBack);
+                        })
                   ],
                 ))
           ],

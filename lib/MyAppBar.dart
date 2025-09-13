@@ -7,11 +7,15 @@ class MyAppBar extends StatefulWidget {
   const MyAppBar(
       {required this.arr,
       required this.btnChecked,
+      required this.appBarHeight,
       required this.routeCallback,
       super.key});
+
   final void Function(int) routeCallback;
   final int btnChecked;
   final List<BtnState> arr;
+  final double appBarHeight;
+
   @override
   State<MyAppBar> createState() => _MyAppBarState();
 }
@@ -23,8 +27,13 @@ class _MyAppBarState extends State<MyAppBar> {
   Widget build(BuildContext context) {
     return Container(
       alignment: Alignment.centerLeft,
-      decoration: BoxDecoration(color: Colors.black),
-      child: Row(
+      height: widget.appBarHeight,
+      decoration: BoxDecoration(color: Colors.white, boxShadow: [
+                  BoxShadow(
+                    offset: Offset(-2, 0), blurRadius: 3, spreadRadius: 0)
+                ]),
+      clipBehavior: Clip.hardEdge,
+      /*child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Row(
@@ -45,7 +54,7 @@ class _MyAppBarState extends State<MyAppBar> {
             ],
           )
         ],
-      ),
+      ),*/
     );
   }
 }
